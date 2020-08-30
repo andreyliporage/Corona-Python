@@ -1,7 +1,8 @@
-import sys
 import pygame
 
 from settings import Settings
+from doctor import Doctor
+import game_functions as gf
 
 def run_game():
     pygame.init()
@@ -9,13 +10,11 @@ def run_game():
     screen = pygame.display.set_mode((
         (ai_settings.screen_width, ai_settings.screen_height)
     ))
-    pygame.display.set_caption("Alien Invasion")
+    pygame.display.set_caption("Corona Python")
+    doctor = Doctor(screen)
 
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-        screen.fill(ai_settings.bg_color)
-        pygame.display.flip()
+        gf.check_events(doctor)
+        gf.update_screen(ai_settings, screen, doctor)
 run_game()
 
