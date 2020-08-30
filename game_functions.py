@@ -28,10 +28,11 @@ def check_keydown_events(event, ai_settings, screen, doctor, bullets):
         new_bullet = Bullet(ai_settings, screen, doctor)
         bullets.add(new_bullet)
 
-def update_screen(ai_setting, screen, doctor, bullets):
+def update_screen(ai_setting, screen, doctor, virus, bullets):
     screen.fill(ai_setting.bg_color)
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     doctor.blitme()
+    virus.blitme()
 
     pygame.display.flip()

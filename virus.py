@@ -14,7 +14,7 @@ class Virus(Sprite):
 
         # inicia cada virus proximo a parte superior esqueda
         self.rect.x = self.rect.width
-        self.rect.y = self.rect.heigth
+        self.rect.y = self.rect.height
 
         self.x = float(self.rect.x)
 
