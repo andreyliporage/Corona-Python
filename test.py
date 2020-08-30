@@ -1,8 +1,8 @@
 import pygame
-
+import game_functions as gf
+from pygame.sprite import Group
 from settings import Settings
 from doctor import Doctor
-import game_functions as gf
 
 def run_game():
     pygame.init()
@@ -12,10 +12,12 @@ def run_game():
     ))
     pygame.display.set_caption("Corona Python")
     doctor = Doctor(ai_settings, screen)
+    bullets = Group()
 
     while True:
-        gf.check_events(doctor)
+        gf.check_events(ai_settings, screen, doctor, bullets)
         doctor.update()
-        gf.update_screen(ai_settings, screen, doctor)
+        bullets.update()
+        gf.update_screen(ai_settings, screen, doctor, bullets)
 run_game()
 
