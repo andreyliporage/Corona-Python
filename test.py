@@ -15,6 +15,7 @@ def run_game():
 
     while True:
         gf.check_events(doctor)
+        doctor.update()
         gf.update_screen(ai_settings, screen, doctor)
 run_game()
 
