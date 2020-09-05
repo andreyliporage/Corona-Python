@@ -62,12 +62,15 @@ def update_screen(ai_setting, screen, doctor, viruses, bullets):
 
     pygame.display.flip()
 
-def update_bullets(viruses, bullets):
+def update_bullets(ai_settings, screen, doctor, viruses, bullets):
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
     collisions = pygame.sprite.groupcollide(bullets, viruses, True, True)
+    if len(viruses) == 0:
+        bullets.empty()
+        create_fleet(ai_settings, screen, doctor, viruses)
 
 def get_number_rows(ai_settings, doctor_height, virus_height):
     available_space_y = (ai_settings.screen_height - (3 * virus_height) - doctor_height)
