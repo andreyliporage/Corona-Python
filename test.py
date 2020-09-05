@@ -23,7 +23,7 @@ def run_game():
         gf.check_events(ai_settings, screen, doctor, bullets)
         doctor.update()
         gf.update_bullets(bullets)
-        viruses.update()
+        gf.update_viruses(viruses)
         for bullet in bullets.copy():
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)

@@ -72,3 +72,7 @@ def get_number_rows(ai_settings, doctor_height, virus_height):
     available_space_y = (ai_settings.screen_height - (3 * virus_height) - doctor_height)
     number_rows = int(available_space_y) / (2 * virus_height)
     return number_rows
+
+
+def update_viruses(viruses):
+    viruses.update()
