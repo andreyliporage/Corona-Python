@@ -9,7 +9,7 @@ class Virus(Sprite):
         self.ai_settings = ai_settings
 
         # carrega a imagem do virus
-        self.image = pygame.image.load('images/virus.bmp')
+        self.image = pygame.image.load('images/sacola2.bmp')
         self.rect = self.image.get_rect()
 
         # inicia cada virus proximo a parte superior esqueda

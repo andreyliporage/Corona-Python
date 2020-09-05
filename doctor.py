@@ -5,7 +5,7 @@ class Doctor():
         self.screen = screen
         self.ai_setting = ai_settings
 
-        self.image = pygame.image.load('images/doctor.bmp')
+        self.image = pygame.image.load('images/aquaman2.bmp')
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
 
