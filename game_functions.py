@@ -74,5 +74,17 @@ def get_number_rows(ai_settings, doctor_height, virus_height):
     return number_rows
 
 
-def update_viruses(viruses):
+def update_viruses(ai_settings, viruses):
+    check_fleet_edges(ai_settings, viruses)
     viruses.update()
+
+def check_fleet_edges(ai_settings, viruses):
+    for virus in viruses.sprites():
+        if virus.check_edges():
+            change_fleet_direction(ai_settings, viruses)
+            break
+
+def change_fleet_direction(ai_settings, viruses):
+    for virus in viruses.sprites():
+        virus.rect.y += ai_settings.fleet_drop_speed
+    ai_settings.fleet_direction *= -1
