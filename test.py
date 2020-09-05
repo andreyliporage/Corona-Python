@@ -17,7 +17,7 @@ def run_game():
     bullets = Group()
     viruses = Group()
 
-    gf.create_fleet(ai_settings, screen, viruses)
+    gf.create_fleet(ai_settings, screen, doctor, viruses)
 
     while True:
         gf.check_events(ai_settings, screen, doctor, bullets)
