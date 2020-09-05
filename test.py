@@ -17,13 +17,13 @@ def run_game():
     bullets = Group()
     viruses = Group()
 
-    gf.create_fleet(ai_settings, screen, viruses)
+    gf.create_fleet(ai_settings, screen, doctor, viruses)
 
     while True:
         gf.check_events(ai_settings, screen, doctor, bullets)
         doctor.update()
         gf.update_bullets(bullets)
-        gf.update_viruses(viruses)
+        viruses.update()
         for bullet in bullets.copy():
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
