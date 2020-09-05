@@ -78,9 +78,12 @@ def get_number_rows(ai_settings, doctor_height, virus_height):
     return number_rows
 
 
-def update_viruses(ai_settings, viruses):
+def update_viruses(ai_settings, doctor, viruses):
     check_fleet_edges(ai_settings, viruses)
     viruses.update()
+
+    if pygame.sprite.spritecollideany(doctor, viruses):
+        print("Corona te pegou!")
 
 def check_fleet_edges(ai_settings, viruses):
     for virus in viruses.sprites():
