@@ -16,15 +16,22 @@ def check_events(ai_settings, screen, doctor, bullets):
 
 def create_fleet(ai_settings, screen, viruses):
     virus = Virus(ai_settings, screen)
-    virus_width = virus.rect.width
-    available_space_x = ai_settings.screen_width - 2 * virus_width
-    number_viruses_x = int(available_space_x / (2 * virus_width))
+    number_viruses_x = get_number_aliens_x(ai_settings, virus.rect.width)
 
     for virus_number in range(number_viruses_x):
-        virus = Virus(ai_settings, screen)
-        virus.x = virus_width + 2 * virus_width * virus_number
-        virus.rect.x = virus.x
-        viruses.add(virus)
+        create_alien(ai_settings, screen, viruses, virus_number)
+
+def get_number_aliens_x(ai_settings, virus_width):
+    available_space_x = ai_settings.screen_width - 2 * virus_width
+    number_viruses_x = int(available_space_x / (2 * virus_width))
+    return number_viruses_x
+
+def create_alien(ai_settings, screen, viruses, virus_number):
+    virus = Virus(ai_settings, screen)
+    virus_width = virus.rect.width
+    virus.x = virus_width + 2 * virus_width * virus_number
+    virus.rect.x = virus.x
+    viruses.add(virus)
 
 def check_keyup_events(event, doctor):
     if event.key == pygame.K_RIGHT:
