@@ -1,9 +1,10 @@
 import pygame
 import game_functions as gf
 from pygame.sprite import Group
+
+import virus
 from settings import Settings
 from doctor import Doctor
-from virus import Virus
 
 def run_game():
     pygame.init()
@@ -14,7 +15,9 @@ def run_game():
     pygame.display.set_caption("Corona Python")
     doctor = Doctor(ai_settings, screen)
     bullets = Group()
-    virus = Virus(ai_settings, screen)
+    viruses = Group()
+
+    gf.create_fleet(ai_settings, screen, viruses)
 
     while True:
         gf.check_events(ai_settings, screen, doctor, bullets)
@@ -24,7 +27,7 @@ def run_game():
             if bullet.rect.bottom <= 0:
                 bullets.remove(bullet)
         print(len(bullets))
-        gf.update_screen(ai_settings, screen, doctor, virus, bullets)
+        gf.update_screen(ai_settings, screen, doctor, viruses, bullets)
 
 run_game()
 
