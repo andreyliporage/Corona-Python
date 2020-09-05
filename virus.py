@@ -21,3 +21,7 @@ class Virus(Sprite):
     # desenha o virus na sua posicao atual
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+
+    def upate(self):
+        self.x += self.ai_settings.virus_speed_factor
+        self.rect.x = self.x
