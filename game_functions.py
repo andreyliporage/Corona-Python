@@ -18,7 +18,7 @@ def check_events(ai_settings, screen, doctor, bullets):
 def create_fleet(ai_settings, screen, doctor, viruses):
     virus = Virus(ai_settings, screen)
     number_viruses_x = get_number_viruses_x(ai_settings, virus.rect.width)
-    number_rows = get_number_rows(ai_settings, doctor.rect.height, virus.rect.height)
+    number_rows = int(get_number_rows(ai_settings, doctor.rect.height, virus.rect.height))
 
     for row_number in range(number_rows):
         for virus_number in range(number_viruses_x):
