@@ -26,6 +26,7 @@ def check_events(ai_settings, screen, stats, play_button, doctor, viruses, bulle
 def check_play_button(ai_settings, screen, stats, play_button, doctor, viruses, bullets, mouse_x, mouse_y):
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
+        ai_settings.initialize_dynamic_settings()
         pygame.mouse.set_visible(False)
         stats.reset_stats()
         stats.game_active = True
@@ -80,12 +81,13 @@ def check_keydown_events(event, ai_settings, screen, doctor, bullets):
             bullets.add(new_bullet)
 
 
-def update_screen(ai_setting, screen, stats, doctor, viruses, bullets, play_button):
+def update_screen(ai_setting, screen, stats, sb, doctor, viruses, bullets, play_button):
     screen.fill(ai_setting.bg_color)
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     doctor.blitme()
     viruses.draw(screen)
+    sb.show_score()
 
     if not stats.game_active:
         play_button.draw_button()
@@ -93,20 +95,27 @@ def update_screen(ai_setting, screen, stats, doctor, viruses, bullets, play_butt
     pygame.display.flip()
 
 
-def check_bullet_virus_collision(ai_settings, screen, doctor, viruses, bullets):
+def check_bullet_virus_collision(ai_settings, screen, stats, sb, doctor, viruses, bullets):
     collisions = pygame.sprite.groupcollide(bullets, viruses, True, True)
+
+    if collisions:
+        for virus in collisions.values():
+            stats.score += ai_settings.virus_points * len(virus)
+            sb.prep_score()
+
     if len(viruses) == 0:
         bullets.empty()
         ai_settings.increase_speed()
         create_fleet(ai_settings, screen, doctor, viruses)
 
 
-def update_bullets(ai_settings, screen, doctor, viruses, bullets):
+def update_bullets(ai_settings, screen, stats, sb, doctor, viruses, bullets):
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-    check_bullet_virus_collision(ai_settings, screen, doctor, viruses, bullets)
+    check_bullet_virus_collision(
+        ai_settings, screen, stats, sb, doctor, viruses, bullets)
 
 
 def get_number_rows(ai_settings, doctor_height, virus_height):

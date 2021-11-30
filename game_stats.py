@@ -6,3 +6,4 @@ class GameStats():
 
     def reset_stats(self):
         self.viruses_left = self.ai_settings.virus_limit
+        self.score = 0
