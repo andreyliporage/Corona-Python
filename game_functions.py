@@ -6,7 +6,7 @@ from bullet import Bullet
 from virus import Virus
 
 
-def check_events(ai_settings, screen, stats, play_button, doctor, viruses, bullets):
+def check_events(ai_settings, screen, stats, sb, play_button, doctor, viruses, bullets):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -19,17 +19,19 @@ def check_events(ai_settings, screen, stats, play_button, doctor, viruses, bulle
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(ai_settings, screen, stats, play_button,
+            check_play_button(ai_settings, screen, stats, sb, play_button,
                               doctor, viruses, bullets, mouse_x, mouse_y)
 
 
-def check_play_button(ai_settings, screen, stats, play_button, doctor, viruses, bullets, mouse_x, mouse_y):
+def check_play_button(ai_settings, screen, stats, sb, play_button, doctor, viruses, bullets, mouse_x, mouse_y):
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
         ai_settings.initialize_dynamic_settings()
         pygame.mouse.set_visible(False)
         stats.reset_stats()
         stats.game_active = True
+        sb.prep_score()
+        sb.prep_level()
         viruses.empty()
         bullets.empty()
         create_fleet(ai_settings, screen, doctor, viruses)
@@ -106,6 +108,8 @@ def check_bullet_virus_collision(ai_settings, screen, stats, sb, doctor, viruses
     if len(viruses) == 0:
         bullets.empty()
         ai_settings.increase_speed()
+        stats.level += 1
+        sb.prep_level()
         create_fleet(ai_settings, screen, doctor, viruses)
 
 
