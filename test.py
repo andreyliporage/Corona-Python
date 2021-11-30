@@ -6,6 +6,8 @@ import virus
 from settings import Settings
 from game_stats import GameStats
 from doctor import Doctor
+from button import Button
+
 
 def run_game():
     pygame.init()
@@ -14,6 +16,7 @@ def run_game():
         (ai_settings.screen_width, ai_settings.screen_height)
     ))
     pygame.display.set_caption("Corona Python")
+    play_button = Button(ai_settings, screen, "Play")
     doctor = Doctor(ai_settings, screen)
     bullets = Group()
     viruses = Group()
@@ -23,16 +26,21 @@ def run_game():
     gf.create_fleet(ai_settings, screen, doctor, viruses)
 
     while True:
-        gf.check_events(ai_settings, screen, doctor, bullets)
-        doctor.update()
-        gf.update_bullets(ai_settings, screen, doctor, viruses, bullets)
-        gf.update_bullets(ai_settings, screen, doctor, viruses, bullets)
-        gf.update_viruses(ai_settings, stats, screen, doctor, viruses, bullets)
-        for bullet in bullets.copy():
-            if bullet.rect.bottom <= 0:
-                bullets.remove(bullet)
-        print(len(bullets))
-        gf.update_screen(ai_settings, screen, doctor, viruses, bullets)
+        gf.check_events(ai_settings, screen, stats,
+                        play_button, doctor, viruses, bullets)
+
+        if stats.game_active:
+            doctor.update()
+            gf.update_bullets(ai_settings, screen, doctor, viruses, bullets)
+            gf.update_bullets(ai_settings, screen, doctor, viruses, bullets)
+            gf.update_viruses(ai_settings, stats, screen,
+                              doctor, viruses, bullets)
+            for bullet in bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    bullets.remove(bullet)
+            print(len(bullets))
+            gf.update_screen(ai_settings, screen, stats, doctor,
+                             viruses, bullets, play_button)
+
 
 run_game()
-

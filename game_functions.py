@@ -6,7 +6,7 @@ from bullet import Bullet
 from virus import Virus
 
 
-def check_events(ai_settings, screen, doctor, bullets):
+def check_events(ai_settings, screen, stats, play_button, doctor, viruses, bullets):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -16,6 +16,23 @@ def check_events(ai_settings, screen, doctor, bullets):
 
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, doctor)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(ai_settings, screen, stats, play_button,
+                              doctor, viruses, bullets, mouse_x, mouse_y)
+
+
+def check_play_button(ai_settings, screen, stats, play_button, doctor, viruses, bullets, mouse_x, mouse_y):
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not stats.game_active:
+        pygame.mouse.set_visible(False)
+        stats.reset_stats()
+        stats.game_active = True
+        viruses.empty()
+        bullets.empty()
+        create_fleet(ai_settings, screen, doctor, viruses)
+        doctor.center_doctor()
 
 
 def create_fleet(ai_settings, screen, doctor, viruses):
@@ -63,14 +80,25 @@ def check_keydown_events(event, ai_settings, screen, doctor, bullets):
             bullets.add(new_bullet)
 
 
-def update_screen(ai_setting, screen, doctor, viruses, bullets):
+def update_screen(ai_setting, screen, stats, doctor, viruses, bullets, play_button):
     screen.fill(ai_setting.bg_color)
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     doctor.blitme()
     viruses.draw(screen)
 
+    if not stats.game_active:
+        play_button.draw_button()
+
     pygame.display.flip()
+
+
+def check_bullet_virus_collision(ai_settings, screen, doctor, viruses, bullets):
+    collisions = pygame.sprite.groupcollide(bullets, viruses, True, True)
+    if len(viruses) == 0:
+        bullets.empty()
+        ai_settings.increase_speed()
+        create_fleet(ai_settings, screen, doctor, viruses)
 
 
 def update_bullets(ai_settings, screen, doctor, viruses, bullets):
@@ -78,10 +106,7 @@ def update_bullets(ai_settings, screen, doctor, viruses, bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-    collisions = pygame.sprite.groupcollide(bullets, viruses, True, True)
-    if len(viruses) == 0:
-        bullets.empty()
-        create_fleet(ai_settings, screen, doctor, viruses)
+    check_bullet_virus_collision(ai_settings, screen, doctor, viruses, bullets)
 
 
 def get_number_rows(ai_settings, doctor_height, virus_height):
@@ -99,6 +124,7 @@ def update_viruses(ai_settings, stats, screen, doctor, viruses, bullets):
 
     if pygame.sprite.spritecollideany(doctor, viruses):
         print("Corona te pegou!")
+    check_viruses_bottom(ai_settings, stats, screen, doctor, viruses, bullets)
 
 
 def check_fleet_edges(ai_settings, viruses):
@@ -115,9 +141,20 @@ def change_fleet_direction(ai_settings, viruses):
 
 
 def doctor_hit(ai_settings, stats, screen, doctor, viruses, bullets):
-    stats.viruses_left -= 1
-    viruses.empty()
-    bullets.empty()
-    create_fleet(ai_settings, screen, doctor, viruses)
-    doctor.center_doctor()
-    sleep(0.5)
+    if stats.viruses_left > 0:
+        stats.viruses_left -= 1
+        viruses.empty()
+        bullets.empty()
+        create_fleet(ai_settings, screen, doctor, viruses)
+        doctor.center_doctor()
+        sleep(0.5)
+    else:
+        stats.game_active = False
+
+
+def check_viruses_bottom(ai_settings, stats, screen, doctor, viruses, bullets):
+    screen_rect = screen.get_rect()
+    for virus in viruses.sprites():
+        if virus.rect.bottom >= screen_rect.bottom:
+            doctor_hit(ai_settings, stats, screen, doctor, viruses, bullets)
+            break
